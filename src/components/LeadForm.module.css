@@ -1,0 +1,42 @@
+
+.heroSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  background-color: var(--primary-color-light);
+  color: var(--text-color);
+  padding: 6rem 2rem;
+
+  background-image: url('/hero-graphic.png');
+  background-size: contain;
+  background-position: left;
+  background-repeat: no-repeat;
+}
+
+.heroText {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.logo {
+  margin-bottom: 48px;
+}
+
+.heading {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+}
