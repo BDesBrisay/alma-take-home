@@ -8,6 +8,9 @@ import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import { Button } from '@mui/material'
 import Ajv from 'ajv'
 import styles from './LeadForm.module.css'
+import FileUpload, { fileUploadControlTester } from './FileUpload'
+
+import { mockCreateLead } from '@/mockapi'
 
 import {
   personalSchema,
@@ -18,7 +21,7 @@ import {
   helpUiSchema
 } from './formSchema'
 
-const combinedSchema = {
+const combinedJsonFormSchema = {
   type: 'object',
   properties: {
     personal: personalSchema,
@@ -31,7 +34,7 @@ const combinedSchema = {
 const LeadForm: React.FC = () => {
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(false)
-  const [validationMode, setValidationMode] = useState<ValidationMode | undefined>('ValidateAndHide')
+  const [validationMode, setValidationMode] = useState<ValidationMode | undefined>('NoValidation')
   const [finished, setFinished] = useState(false)
   
   const ajv = new Ajv({
@@ -40,7 +43,7 @@ const LeadForm: React.FC = () => {
     verbose: true // Provides detailed error messages
   });
 
-  const validate = ajv.compile(personalSchema)
+  const validate = ajv.compile(combinedJsonFormSchema)
 
   const handleSubmit = (event: React.FormEvent) => {
     console.log('Submitting form')
@@ -49,15 +52,13 @@ const LeadForm: React.FC = () => {
 
     setLoading(true)
 
-    setValidationMode('ValidateAndShow')
-
     const isValid = validate(data)
 
     if (isValid) {
       console.log('Validation passed')
 
       // submit to API
-      // TODO
+      mockCreateLead(data)
 
       // direct to confirmation screen
       setFinished(true)
@@ -77,7 +78,14 @@ const LeadForm: React.FC = () => {
   if (finished) {
     return (
       <div>
-        Thank you for submitting your information
+        <h1>Thank you</h1>
+        <p>Your information was submitted to our team of immigration<br/>attorneys. Expect an email from hello@tryalma.ai.</p>
+        <button onClick={() => {
+          setData({})
+          setFinished(false)
+        }}>
+          Go Back to Homepage
+        </button>
       </div>
     )  
   }
@@ -103,13 +111,62 @@ const LeadForm: React.FC = () => {
       </div>
 
       <div className={styles.form}>
+
+        <Image
+          src="/icon-info.png"
+          alt="Info"
+          width={66}
+          height={70}
+        />
+        <h2>Want to understand you visa options?</h2>
+        <p>Submit the form below and our team of experienced attorneys will review your information and send a preliminary assessment if your case based on your goals.</p>
+
         <JsonForms
           schema={personalSchema}
           uischema={personalUiSchema}
           data={data}
+          renderers={[
+            ...materialRenderers,
+            { tester: fileUploadControlTester, renderer: FileUpload }
+          ]}
+          cells={materialCells}
+          onChange={({ data }) => setData((prevData) => ({ ...prevData, ...data }))} // merge data
+          validationMode={validationMode}
+        />
+
+        <Image
+          src="/icon-dice.png"
+          alt="Visa"
+          width={66}
+          height={70}
+        />
+        <h2>Visa categories of interest?</h2>
+
+        <JsonForms
+          schema={visaSchema}
+          uischema={visaUiSchema}
+          data={data}
           renderers={materialRenderers}
           cells={materialCells}
-          onChange={({ data }) => setData(data)}
+          onChange={({ data }) => setData((prevData) => ({ ...prevData, ...data }))} // merge data
+          validationMode={validationMode}
+        />
+
+        <Image
+          src="/icon-heart.png"
+          alt="Heart"
+          width={76}
+          height={70}
+        />
+        <h2>How Can We Help?</h2>
+
+        <JsonForms
+          schema={helpSchema}
+          uischema={helpUiSchema}
+          data={data}
+          renderers={materialRenderers}
+          cells={materialCells}
+          onChange={({ data }) => setData((prevData) => ({ ...prevData, ...data }))} // merge data
           validationMode={validationMode}
         />
 
@@ -119,6 +176,7 @@ const LeadForm: React.FC = () => {
             variant="contained"
             onClick={handleSubmit}
             disabled={loading}
+            size="large"
           >
             Submit
           </Button>

@@ -28,13 +28,18 @@ export const personalSchema = {
       pattern: '^\\+?[1-9]\\d{1,14}$',
       description: 'Phone Number',
     },
+    linkedin: {
+      type: 'string',
+      format: 'uri',
+      description: 'Linkedin / Personal Website',
+    },
     resume: {
       type: 'string',
       format: 'data-url',
-      description: 'Linkedin / Personal Website',
+      description: 'Upload your resume',
     }
   },
-  required: ['firstName', 'lastName', 'email', 'phone', 'resume'],
+  required: ['firstName', 'lastName', 'email', 'phone', 'linkedin', 'resume'],
 }
 
 export const personalUiSchema = {
@@ -58,11 +63,14 @@ export const personalUiSchema = {
     },
     {
       type: 'Control',
-      scope: '#/properties/resume',
-      options: {
-        format: 'data-url',
-      },
+      scope: '#/properties/linkedin',
+      label: 'Linkedin / Personal Website'
     },
+    {
+      type: 'Control',
+      scope: '#/properties/resume',
+      label: 'Upload your resume'
+    }
   ],
 }
 
@@ -74,8 +82,13 @@ export const visaSchema = {
   properties: {
     visa: {
       type: 'string',
-      title: 'Visa',
-      enum: ['H1B', 'OPT', 'CPT', 'Green Card'],
+      title: 'Visa', // O-1, EB-1A, EB-2 NIW, I Don't Know 
+      oneOf: [
+        { const: 'O-1', title: 'O-1' },
+        { const: 'EB-1A', title: 'EB-1A' },
+        { const: 'EB-2 NIW', title: 'EB-2 NIW' },
+        { const: 'I Don\'t Know', title: 'I Don\'t Know' }
+      ]
     },
   },
 }
