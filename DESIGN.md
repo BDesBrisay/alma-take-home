@@ -4,7 +4,7 @@
 This project focuses on building a dynamic, form-driven UI for managing leads, primarily concentrating on the frontend side. Due to time constraints, I prioritized getting the assessment form styled closely to the provided mock and ensuring a smooth user experience.
 
 ## Screenshot of Assessment page:
-![Screenshot]('./alma-screenshot.png')
+![Screenshot]('./public/alma-screenshot.png')
 
 ## Key Design Decisions
 
